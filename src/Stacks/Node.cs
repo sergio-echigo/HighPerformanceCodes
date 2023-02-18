@@ -24,24 +24,29 @@ public class Node<T>
     /// <summary>
     /// Adds a node in the top of the stack.
     /// </summary>
-    public void Push(T? value)
+    public T? Push(T? value)
     {
         if (this.IsFull())
             throw new StackOverflowException();
 
         Node<T> top = new Node<T>(value, this._nextNode);
         this._nextNode = top;
+
+        return top._value;
     }
 
     /// <summary>
     /// Deletes a node from the top of the stack.
     /// </summary>
-    public void Pop()
+    public T? Pop()
     {
         if (this.IsEmpty())
             throw new StackOverflowException();
 
+        var copy = this._nextNode!._value;
         this._nextNode = this._nextNode?._nextNode;
+    
+        return copy;
     }
 
     /// <summary>

@@ -27,3 +27,29 @@ stack.Push(1);
 
 Console.WriteLine("Stack is empty: " + stack.IsEmpty());
 Console.WriteLine("Stack is full: " + stack.IsFull());
+
+/* Decimal to binary example */
+int n = 13;
+Node<int> s = new(1000);
+
+while(n > 0)
+{
+    var r = n % 2;
+    s.Push(r);
+
+    n = n / 2;  
+}
+
+var j = 0;
+do
+{
+    try
+    {
+        var r = s.Pop();
+        Console.Write(r);
+    } 
+    catch
+    {
+        break;
+    }
+} while (true);
