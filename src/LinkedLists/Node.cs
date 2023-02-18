@@ -4,8 +4,8 @@ namespace LinkedLists;
 
 public class Node<T>
 {
-    private T? Value { get; set; } = default(T);
-    private Node<T>? NxtNode { get; set; } = null;
+    private T? _value { get; set; } = default(T);
+    private Node<T>? _nxt { get; set; } = null;
 
     public T? this[int i]
     {
@@ -35,8 +35,8 @@ public class Node<T>
 
     private Node(T? value, Node<T>? nxt)
     {
-        Value = value;
-        NxtNode = nxt;
+        _value = value;
+        _nxt = nxt;
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public class Node<T>
         var last = this.GetLast();
         Node<T> n = new(value, null);
 
-        last.NxtNode = n;
+        last._nxt = n;
     }
 
     /// <summary>
@@ -62,35 +62,35 @@ public class Node<T>
 
         if (index == 0)
         {
-            this.NxtNode = this.NxtNode!.NxtNode;
+            this._nxt = this._nxt!._nxt;
         }
         else
         {
             var node = this.GetNodeAt(index - 1);
             if (node is not null)
-                node!.NxtNode = node!.NxtNode!.NxtNode;
+                node!._nxt = node!._nxt!._nxt;
         }
 
-        toRm.Value = default(T);
-        toRm.NxtNode = null;
+        toRm._value = default(T);
+        toRm._nxt = null;
     }
 
     /// <summary>
     /// Verifies if there is any element in the list.
     /// </summary>
     public bool Any() =>
-        this.NxtNode is not null;
+        this._nxt is not null;
 
     /// <summary>
     /// Prints all values inside the list.
     /// </summary>
     public void PrintAll()
     {
-        var aux = this.NxtNode;
+        var aux = this._nxt;
         for(int i = 0; i < this.Count(); ++i)
         {
-            Console.WriteLine(aux!.Value);
-            aux = aux!.NxtNode;
+            Console.WriteLine(aux!._value);
+            aux = aux!._nxt;
         }
     }
 
@@ -100,9 +100,9 @@ public class Node<T>
     private Node<T> GetLast()
     {
         var aux = this;
-        while (aux.NxtNode is not null)
+        while (aux._nxt is not null)
         {
-            aux = aux.NxtNode;
+            aux = aux._nxt;
         }
 
         return aux;
@@ -114,8 +114,8 @@ public class Node<T>
     private int Count()
     {
         var i = 0;
-        for (var n = this; n.NxtNode is not null; ++i)
-            n = n.NxtNode;
+        for (var n = this; n._nxt is not null; ++i)
+            n = n._nxt;
 
         return i;
     }
@@ -131,9 +131,9 @@ public class Node<T>
     /// <summary>
     private Node<T>? GetNodeAt(int i)
     {
-        var aux = this.NxtNode;
+        var aux = this._nxt;
         for (int j = 0; j < i; ++j)
-            aux = aux!.NxtNode;
+            aux = aux!._nxt;
 
         return aux;
     }
@@ -144,12 +144,12 @@ public class Node<T>
     private T? GetValueAt(int i)
     {
         var aux = this;
-        T? toReturn = aux.NxtNode!.Value;
+        T? toReturn = aux._nxt!._value;
 
         for (int j = 0; j < i; ++j)
         {
-            aux = aux.NxtNode;
-            toReturn = aux!.NxtNode!.Value;
+            aux = aux._nxt;
+            toReturn = aux!._nxt!._value;
         }
 
         return toReturn;
