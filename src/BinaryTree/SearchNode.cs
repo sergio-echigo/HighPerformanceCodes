@@ -7,6 +7,7 @@ namespace BinaryTree;
 public class SearchNode
 {
     private double? _value;
+    private int _level = 1;
 
     private SearchNode? _left = null;
     private SearchNode? _right = null;
@@ -17,7 +18,9 @@ public class SearchNode
     private SearchNode(double value, SearchNode parent)
     {
         this._value = value;
-        _parent = parent;
+        this._level = parent._level + 1;
+        
+        this._parent = parent;
     }
 
     /// <summary>
@@ -55,7 +58,6 @@ public class SearchNode
         {
             if (this._left is not null)
                 this._left.Delete(value);
-
         }
         // If value to delete is grather than actual node's value, searches in the right child node and removes it.
         else if (value > this._value)
@@ -70,40 +72,43 @@ public class SearchNode
             if (this.IsLeafNode())
             {
                 if (this._parent is not null)
-                {
                     if (value > this._parent._value)
-                    {
                         this._parent._right = null;
-                    }
                     else
-                    {
                         this._parent._left = null;
-                    }
-                }
                 else
-                {
                     this._value = null;
-                }
             }
             else
             {
-                // If parent node isn't null (we are not the root node)
+                // If parent node isn't null ("we are" not in the root node)
                 if (this._parent is not null)
                 {
                     // We're the left child node from parent.
                     if (this._parent._value > value)
                     {
-                        if (this._left is null)
+                        if (this._left is null) 
+                        {
                             this._parent._left = this._right;
-                        else if (this._right is null)
+                            this._parent._left!.LDec(); // '!' mark: already checked if "we're" a leaf node.
+                        }
+                        else if (this._right is null) 
+                        {
                             this._parent._left = this._left;
+                            this._parent._left.LDec();
+                        }
                         else
                         {
                             SearchNode n = this._right;
                             while(n!._left is not null)
+                            {
+                                this._left.LInc();
                                 n = n._left;
+                            }
 
                             this._parent._left = this._right;
+                            this._right.LDec();                         
+                            
                             n._left = this._left;
                         }
                     }
@@ -111,21 +116,29 @@ public class SearchNode
                     else
                     {
                         if (this._left is null)
+                        {
                             this._parent._right = this._right;
+                            this._parent._right!.LDec(); // '!' mark: already checked if "we're" a leaf node.
+                        }
                         else if (this._right is null)
+                        {
                             this._parent._right = this._left;
+                            this._parent._right!.LDec();
+                        }
                         else
                         {
                             SearchNode n = this._right;
                             while(n!._left is not null)
+                            {
+                                this._left.LInc();
                                 n = n._left;
-
-                            Console.WriteLine("n is " + n);
-                            this._parent._right = this._right;
+                            }
+                            
+                            this._parent._left = this._right;
+                            this._right.LDec();
 
                             n._left = this._left;
                         }
-
                     }
                 }
                 else
@@ -139,15 +152,15 @@ public class SearchNode
     /// <summary>
     /// Prints the whole binary tree. The number inside () represents the level.
     /// </summary>
-    public void Print(int level = 0)
+    public void Print()
     {
         if (this._left is not null)
-            this._left.Print(level + 1);
+            this._left.Print();
         
-        Console.Write($" {this._value}({level})");
+        Console.Write($" {this._value}({this._level})");
 
         if (this._right is not null)
-            this._right.Print(level + 1);
+            this._right.Print();
     }
 
     /// <summary>
@@ -167,5 +180,27 @@ public class SearchNode
         this._right = right;
 
         this._parent = parent;
+    }
+
+    /// <summary>
+    /// Increments by one all subnodes level of the specified node.
+    /// </summary>
+    private void LInc()
+    {
+        ++this._level;
+
+        this._left?.LInc();
+        this._right?.LInc();
+    }
+
+    /// <summary>
+    /// Decrements by one all subnodes level of the specified node.
+    /// </summary>
+    private void LDec()
+    {
+        --this._level;
+
+        this._left?.LDec();
+        this._right?.LDec();
     }
 }
